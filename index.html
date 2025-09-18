@@ -1,737 +1,730 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <meta name="theme-color" content="#2563eb" />
-    <meta name="description" content="Progressive ski touring training program with periodization" />
-    
-    <!-- PWA Meta Tags -->
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="SkiPrep" />
-    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ski Touring Prep Training</title>
-    
-    <!-- Reliable CDN sources for GitHub Pages -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide-react@latest/dist/umd/lucide-react.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone@7.23.4/babel.min.js"></script>
-    
-    <!-- Embedded Manifest for PWA -->
-    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22:%22Ski%20Touring%20Prep%20Training%22,%22short_name%22:%22SkiPrep%22,%22description%22:%22Progressive%20ski%20touring%20training%20program%22,%22start_url%22:%22./%22,%22display%22:%22standalone%22,%22background_color%22:%22%23f9fafb%22,%22theme_color%22:%22%232563eb%22,%22icons%22:%5B%7B%22src%22:%22data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Im0xNyAyIDQgNC0yIDQtNC00LTQgNC00LTQgMi00IDQtNHoiIGZpbGw9IiMyNTYzZWIiLz48cGF0aCBkPSJtNSAxNCA0LTQgNCA0LTIgNHoiIGZpbGw9IiM2MzY2ZjEiLz48L3N2Zz4=%22,%22sizes%22:%22192x192%22,%22type%22:%22image/svg+xml%22%7D%5D%7D" />
-    
     <style>
-        body { 
-            -webkit-user-select: none; 
-            user-select: none; 
-            overscroll-behavior: none;
-            margin: 0;
-            font-family: system-ui, -apple-system, sans-serif;
-        }
-        input, select, textarea { font-size: 16px; }
-        button, .cursor-pointer { min-height: 44px; }
-        
-        .splash-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background: linear-gradient(135deg, #2563eb 0%, #6366f1 100%);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 9999; transition: opacity 0.5s ease-out; color: white;
-        }
-        .fade-out { opacity: 0; }
-        
-        .loading-error {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            text-align: center; padding: 20px; background: white; border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1); z-index: 10000;
-        }
-        
-        .install-button {
-            position: fixed; bottom: 20px; right: 20px; 
-            background: #2563eb; color: white; border: none; 
-            padding: 12px 16px; border-radius: 25px; 
-            font-size: 14px; font-weight: bold; 
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); 
-            cursor: pointer; z-index: 1000;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
-            50% { box-shadow: 0 4px 20px rgba(37, 99, 235, 0.5); }
-            100% { box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
-        }
-        
-        /* Lucide Icons CSS replacement */
-        .icon {
-            width: 20px;
-            height: 20px;
-            display: inline-block;
-            vertical-align: middle;
-        }
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; }
     </style>
 </head>
 <body>
-    <!-- Loading Error Fallback -->
-    <div id="loading-error" class="loading-error" style="display: none;">
-        <h2>🔄 Loading App...</h2>
-        <p>If this persists, try refreshing the page</p>
-        <button onclick="window.location.reload()" style="background: #2563eb; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
-            Refresh Page
-        </button>
-    </div>
-
-    <!-- Splash Screen -->
-    <div id="splash-screen" class="splash-screen">
-        <div style="font-size: 64px; margin-bottom: 20px;">⛷️</div>
-        <div style="font-size: 28px; font-weight: bold; margin-bottom: 10px;">SkiPrep</div>
-        <div style="opacity: 0.8; font-size: 16px;">Ski Touring Training</div>
-        <div style="margin-top: 30px; font-size: 14px; opacity: 0.7;">Loading your training plan...</div>
-    </div>
-
-    <!-- App Container -->
     <div id="root"></div>
 
-    <script>
-        // Simple icon replacements since Lucide might not load
-        const iconReplacements = {
-            Mountain: () => '🏔️',
-            CheckCircle2: () => '✅',
-            Circle: () => '⭕',
-            Play: () => '▶️',
-            Clock: () => '⏰',
-            Dumbbell: () => '💪',
-            Activity: () => '📊'
-        };
-
-        // Show error message after 10 seconds if still loading
-        setTimeout(() => {
-            if (document.getElementById('splash-screen').style.display !== 'none') {
-                document.getElementById('loading-error').style.display = 'block';
-            }
-        }, 10000);
-    </script>
-
     <script type="text/babel">
-        const { useState } = React;
-        
-        // Simple icon component that falls back to emoji
-        const Icon = ({ name, className = "w-5 h-5" }) => {
-            const emoji = iconReplacements[name] || '●';
-            return <span className={`icon ${className}`}>{emoji}</span>;
-        };
+        const { useState, useEffect } = React;
+        const { 
+            Calendar, CheckCircle2, Circle, Play, Clock, Mountain, 
+            Dumbbell, Activity 
+        } = lucideReact;
 
         const SkiTouringPrepApp = () => {
-          const [currentWeek, setCurrentWeek] = useState(1);
-          const [completedWorkouts, setCompletedWorkouts] = useState(new Set());
-          const [selectedWorkout, setSelectedWorkout] = useState(null);
+            const [currentWeek, setCurrentWeek] = useState(1);
+            const [completedWorkouts, setCompletedWorkouts] = useState(new Set());
+            const [selectedDate, setSelectedDate] = useState(new Date());
+            const [selectedWorkout, setSelectedWorkout] = useState(null);
+            const [storageAvailable, setStorageAvailable] = useState(true);
 
-          // Helper functions
-          const isRecoveryWeek = (week) => week % 4 === 0;
-
-          const getPackWeight = (week) => {
-            if (week <= 4) return `${10 + (week - 1) * 2}-${12 + (week - 1) * 2}lbs`;
-            if (week <= 8) return `${16 + (week - 5) * 2}-${20 + (week - 5) * 2}lbs`;
-            if (week <= 12) return `${22 + (week - 9) * 2}-${26 + (week - 9) * 2}lbs`;
-            return `${28}-${32}lbs`;
-          };
-
-          const getRunningDuration = (week, isRecovery) => {
-            if (isRecovery) return Math.max(45, 60 + (week - 4) * 5);
-            return 60 + (week - 1) * 8;
-          };
-
-          const getLongDayDuration = (week) => {
-            const baseMinutes = 180;
-            if (isRecoveryWeek(week)) {
-              return Math.max(120, baseMinutes + (week - 4) * 15);
-            }
-            return baseMinutes + (week - 1) * 20;
-          };
-
-          // Workout library
-          const workoutLibrary = {
-            'Rest Day Recovery + Hip/Ankle Mobility': {
-              warmup: "5min gentle walk or easy movement to assess how body feels",
-              main: [
-                "Hip flexor stretches: 3x45sec each leg",
-                "Ankle circles + calf stretches: 5min total", 
-                "Light foam rolling: IT band, quads, calves (8min)",
-                "Gentle spinal twists: 5 each direction",
-                "Deep breathing: 3min relaxation"
-              ],
-              cooldown: "Complete rest - this IS your recovery day"
-            },
-            
-            'Active Recovery + Fascial Release': {
-              warmup: "5min gentle movement assessment",
-              main: [
-                "Light fascial release: legs focus (10min)",
-                "Hip and glute stretches: 8min",
-                "Shoulder mobility: wall slides, doorway stretch (5min)",
-                "Gentle yoga flow: 10min",
-                "Meditation/visualization: 5min"
-              ],
-              cooldown: "Complete relaxation and mental preparation"
-            },
-
-            'Step-ups + Pull-ups + Single-leg Foundation': {
-              warmup: "8min dynamic warm-up: march → arm circles → leg swings → lunges → squats → easy step-ups",
-              main: [
-                "Weighted step-ups 18-24\": 3x12 each leg (progressive pack weight)",
-                "Pull-ups or assisted: 4x5-8 reps",
-                "Single-leg glute bridges: 3x10 each side",
-                "Bulgarian split squats: 3x8 each leg",
-                "Plank: 3x30-45 seconds",
-                "Face pulls (shoulder health): 2x15"
-              ],
-              cooldown: "Hip flexor stretch, calf stretch, upper back stretch, 5min easy walk"
-            },
-            
-            'Jump Prep + Eccentric Loading + Rows': {
-              warmup: "10min progressive warm-up: walk → mobility → bodyweight movements → power prep",
-              main: [
-                "Box steps (controlled): 3x8 each leg",
-                "Eccentric squats (3sec down): 3x8", 
-                "Bent-over rows: 3x10",
-                "Nordic hamstring curls (assisted): 3x3-5",
-                "Jump prep: Small hops 2x10",
-                "Overhead press: 3x8"
-              ],
-              cooldown: "Quad stretch, hamstring stretch, shoulder stretch, foam roll legs"
-            },
-
-            'Weighted Step-ups + Pull-ups + Plyometrics': {
-              warmup: "10min progressive: walk → mobility → bodyweight → plyometric prep",
-              main: [
-                "Weighted step-ups: 4x10 each leg (progressive pack weight)",
-                "Pull-ups: 4x6-10 reps (add weight if possible)",
-                "Box jumps: 3x5 (focus on soft landing)",
-                "Lateral bounds: 3x6 each direction", 
-                "Single-leg deadlifts: 3x8 each leg",
-                "Push-ups: 3x10-15"
-              ],
-              cooldown: "Deep calf stretch, IT band roll, quad stretch, upper body stretch"
-            },
-
-            'Skinning Pace Base Build': {
-              warmup: "12min progressive warm-up: easy → incline → tempo practice",
-              main: [
-                "Progressive duration: Week 1: 60min → Week 16: 180min",
-                "Target: nose breathing only (conversational pace)",
-                "Simulate skinning rhythm: steady, sustainable effort",
-                "Focus on efficient uphill running technique",
-                "Recovery weeks: reduce by 15min, easy pace only"
-              ],
-              cooldown: "5min easy walk/jog, dynamic stretching, hydrate"
-            },
-
-            'Tempo Intervals + Base': {
-              warmup: "15min progressive: easy run → strides → tempo practice",
-              main: [
-                "Progressive structure by week:",
-                "Weeks 5-6: 4x6min tempo + 30min base",
-                "Weeks 7-8: 5x6min tempo + 35min base",
-                "Weeks 9+: 6x6min tempo + 40min base", 
-                "2min easy recovery between intervals",
-                "Recovery weeks: 3x6min tempo + 25min easy base"
-              ],
-              cooldown: "10min easy cool-down jog, full leg stretching"
-            },
-
-            'Single-leg Power + Nordic Curls + Rows': {
-              warmup: "12min activation: movement → mobility → activation → power prep",
-              main: [
-                "Single-leg box step-ups (explosive): 4x6 each leg",
-                "Nordic hamstring curls: 4x3-6 reps",
-                "Single-arm rows: 3x8 each arm",
-                "Lateral lunges: 3x8 each direction",
-                "Calf raises (single leg): 3x12 each",
-                "Pull-ups: 3x6-10"
-              ],
-              cooldown: "Deep hamstring stretch, calf stretch, hip flexor release, upper back mobility"
-            },
-
-            'Optional Easy Run + Mobility Flow': {
-              warmup: "If running: 8min easy build. If mobility only: 5min gentle movement",
-              main: [
-                "OPTION A: 30min easy recovery run + 15min mobility",
-                "OPTION B: Skip run, do 45min comprehensive mobility",
-                "Mobility focus: hips, ankles, shoulders, spine",
-                "Recovery weeks: Skip run, extra mobility work",
-                "This day is about feeling good, not training hard"
-              ],
-              cooldown: "Complete relaxation, prepare for big Saturday"
-            },
-
-            'Long Trail Run/Ski (build pack weight)': {
-              warmup: "15min progressive warm-up with pack: easy → build → target pace",
-              main: [
-                "3-7hr continuous trail running/skiing with pack (progressive)",
-                "Pack weight increases weekly (see workout details)",
-                "Mix terrain: uphills, flats, technical sections", 
-                "Practice nutrition every 45-60min",
-                "Focus on sustainable pacing for long efforts",
-                "Recovery weeks: reduce duration 25%, easy pacing"
-              ],
-              cooldown: "20min walking cool-down, comprehensive stretching, refuel properly"
-            },
-
-            'Optional Easy Run + Deep Recovery': {
-              warmup: "If running: 5min very easy. If recovery only: gentle movements",
-              main: [
-                "OPTION A: 30-45min easy recovery run/ski + 30min recovery",
-                "OPTION B: Skip activity, do 60min full recovery protocol",
-                "Recovery focus: foam rolling, stretching, relaxation",
-                "Recovery weeks: Complete rest recommended",
-                "Listen to your body - rest if needed"
-              ],
-              cooldown: "Complete rest and preparation for the week ahead"
-            }
-          };
-
-          // Training phases
-          const getTrainingPhase = (week) => {
-            if (week <= 4) return { name: "Base Building", color: "bg-blue-500" };
-            if (week <= 8) return { name: "Aerobic Development", color: "bg-green-500" };
-            if (week <= 12) return { name: "Strength & Power", color: "bg-orange-500" };
-            return { name: "Peak & Taper", color: "bg-purple-500" };
-          };
-
-          // Workout templates  
-          const workoutTemplates = {
-            aerobicBase: {
-              name: "Aerobic Base",
-              icon: <Icon name="Mountain" />,
-              description: "Zone 1-2 for touring endurance"
-            },
-            highVolume: {
-              name: "Volume Work", 
-              icon: <Icon name="Clock" />,
-              description: "Long day touring preparation"
-            },
-            strength: {
-              name: "Strength & Power",
-              icon: <Icon name="Dumbbell" />,
-              description: "Touring legs + impact preparation"
-            },
-            mobility: {
-              name: "Mobility & Recovery",
-              icon: <Icon name="Activity" />,
-              description: "Movement prep + fascia health"
-            }
-          };
-
-          // Generate weekly schedule (simplified for space)
-          const generateWeekSchedule = (week) => {
-            const recovery = isRecoveryWeek(week);
-            const packWeight = getPackWeight(week);
-            const runDuration = getRunningDuration(week, recovery);
-            const longDuration = getLongDayDuration(week);
-            
-            return [
-              { 
-                day: 'Monday', type: 'mobility', 
-                workout: recovery ? 'Active Recovery + Fascial Release' : 'Rest Day Recovery + Hip/Ankle Mobility', 
-                duration: recovery ? 35 : 40,
-                details: recovery ? "Extra recovery focus" : "Standard recovery"
-              },
-              { 
-                day: 'Tuesday', type: 'strength', 
-                workout: 'Step-ups + Pull-ups + Single-leg Foundation', 
-                duration: recovery ? 40 : 50,
-                details: `Week ${week} progression, ${packWeight}`
-              },
-              { 
-                day: 'Wednesday', type: 'aerobicBase', 
-                workout: week <= 4 ? 'Skinning Pace Base Build' : 'Tempo Intervals + Base', 
-                duration: runDuration,
-                details: recovery ? "Easy pace only" : `Week ${week} build`
-              },
-              { 
-                day: 'Thursday', type: 'strength', 
-                workout: week <= 4 ? 'Jump Prep + Eccentric Loading + Rows' : 'Single-leg Power + Nordic Curls + Rows', 
-                duration: recovery ? 40 : 50,
-                details: `Week ${week} progression`
-              },
-              { 
-                day: 'Friday', type: 'mobility', 
-                workout: 'Optional Easy Run + Mobility Flow', 
-                duration: recovery ? 35 : 45,
-                details: recovery ? "Skip run, mobility only" : "Easy run + mobility"
-              },
-              { 
-                day: 'Saturday', type: 'highVolume', 
-                workout: 'Long Trail Run/Ski (build pack weight)', 
-                duration: longDuration,
-                details: `${recovery ? 'Recovery long day' : 'Week ' + week + ' build'}, ${packWeight}`
-              },
-              { 
-                day: 'Sunday', type: 'mobility', 
-                workout: 'Optional Easy Run + Deep Recovery', 
-                duration: recovery ? 35 : 50,
-                details: recovery ? "Full rest recommended" : "Optional easy movement"
-              }
-            ];
-          };
-
-          const currentPhase = getTrainingPhase(currentWeek);
-          const weekSchedule = generateWeekSchedule(currentWeek);
-          
-          const toggleWorkoutCompletion = (workoutId) => {
-            const newCompleted = new Set(completedWorkouts);
-            if (newCompleted.has(workoutId)) {
-              newCompleted.delete(workoutId);
-            } else {
-              newCompleted.add(workoutId);
-            }
-            setCompletedWorkouts(newCompleted);
-          };
-
-          const getCompletionRate = () => {
-            const totalWorkouts = weekSchedule.length;
-            const completed = weekSchedule.filter(w => 
-              completedWorkouts.has(`${currentWeek}-${w.day}`)
-            ).length;
-            return Math.round((completed / totalWorkouts) * 100);
-          };
-
-          const getWorkoutDetails = (workoutName) => {
-            return workoutLibrary[workoutName] || {
-              warmup: "General warm-up appropriate for workout type",
-              main: ["Follow workout template guidelines"],
-              cooldown: "Cool down and stretch targeted muscle groups"
-            };
-          };
-
-          return (
-            <div className="max-w-4xl mx-auto p-6 bg-gray-50 min-h-screen">
-              {/* Header */}
-              <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h1 className="text-3xl font-bold text-gray-800 mb-2">
-                      Ski Touring Prep Training
-                    </h1>
-                    <p className="text-gray-600">
-                      Progressive training with recovery weeks
-                    </p>
-                  </div>
-                  <Icon name="Mountain" className="w-12 h-12 text-blue-600" />
-                </div>
-                
-                <div className="mt-4 flex items-center space-x-4">
-                  <div className={`${currentPhase.color} text-white px-4 py-2 rounded-full text-sm font-medium`}>
-                    Week {currentWeek}: {currentPhase.name}
-                  </div>
-                  <div className="text-sm text-gray-600">
-                    Completion: {getCompletionRate()}%
-                  </div>
-                </div>
-              </div>
-
-              {/* Week Navigation */}
-              <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold">Training Week</h2>
-                  <div className="flex space-x-2">
-                    <button 
-                      onClick={() => setCurrentWeek(Math.max(1, currentWeek - 1))}
-                      className="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300 min-h-10"
-                      disabled={currentWeek === 1}
-                    >
-                      Previous
-                    </button>
-                    <span className="px-4 py-2 bg-blue-100 rounded font-medium min-h-10 flex items-center">
-                      Week {currentWeek}
-                    </span>
-                    <button 
-                      onClick={() => setCurrentWeek(currentWeek + 1)}
-                      className="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300 min-h-10"
-                    >
-                      Next
-                    </button>
-                  </div>
-                </div>
-                
-                <div className="text-sm text-gray-600 mb-4">
-                  {isRecoveryWeek(currentWeek) && (
-                    <div className="bg-yellow-100 border border-yellow-300 rounded p-3 mb-3">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-yellow-600 font-semibold">🔄 Recovery Week {currentWeek}</span>
-                      </div>
-                      <p className="text-yellow-700 text-sm mt-1">
-                        Reduced volume and intensity. Focus on recovery, mobility, and preparation for next training block.
-                      </p>
-                    </div>
-                  )}
-                  {currentPhase.name === "Base Building" && 
-                    "Focus: Skinning pace aerobic base, single-leg strength foundation, fascial preparation"}
-                  {currentPhase.name === "Aerobic Development" && 
-                    "Focus: Long day endurance, weighted step-ups, plyometric preparation, back-to-back sessions"}
-                  {currentPhase.name === "Strength & Power" && 
-                    "Focus: Drop jump readiness, multi-plane power, peak long days (6+ hours), impact preparation"}
-                  {currentPhase.name === "Peak & Taper" && 
-                    "Focus: Maintaining fitness while preparing legs/fascia for touring season demands"}
-                </div>
-              </div>
-
-              {/* Weekly Schedule */}
-              <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-                <h3 className="text-xl font-semibold mb-4">This Week's Training</h3>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {weekSchedule.map((workout, index) => {
-                    const workoutId = `${currentWeek}-${workout.day}`;
-                    const isCompleted = completedWorkouts.has(workoutId);
-                    const workoutType = workoutTemplates[workout.type];
+            // Load saved progress on component mount
+            useEffect(() => {
+                try {
+                    const savedWeek = localStorage.getItem('skiTouringCurrentWeek');
+                    const savedCompletedWorkouts = localStorage.getItem('skiTouringCompletedWorkouts');
                     
-                    return (
-                      <div 
-                        key={index}
-                        className={`border rounded-lg p-4 transition-all cursor-pointer hover:shadow-lg ${
-                          isCompleted ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200 hover:border-blue-300'
-                        }`}
-                        onClick={() => setSelectedWorkout(workout)}
-                      >
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center space-x-2">
-                            {workoutType.icon}
-                            <span className="font-medium text-gray-700">{workout.day}</span>
-                          </div>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              toggleWorkoutCompletion(workoutId);
-                            }}
-                            className="text-green-600 hover:text-green-700 min-h-11 min-w-11 flex items-center justify-center"
-                          >
-                            <Icon name={isCompleted ? "CheckCircle2" : "Circle"} />
-                          </button>
-                        </div>
-                        
-                        <h4 className="font-semibold text-gray-800 mb-2 text-sm">{workout.workout}</h4>
-                        <p className="text-sm text-gray-600 mb-2">{workoutType.name}</p>
-                        {workout.details && (
-                          <p className="text-xs text-gray-500 mb-3 italic">{workout.details}</p>
-                        )}
-                        
-                        <div className="flex items-center text-sm text-gray-500 mb-4">
-                          <Icon name="Clock" className="w-4 h-4 mr-1" />
-                          {workout.duration} min
-                          {isRecoveryWeek(currentWeek) && (
-                            <span className="ml-2 text-xs bg-yellow-200 text-yellow-700 px-2 py-1 rounded">Recovery</span>
-                          )}
-                        </div>
-                        
-                        <div className="mt-4 pt-3 border-t border-gray-200">
-                          <div className="flex items-center justify-center space-x-2 text-blue-600 font-medium">
-                            <Icon name="Play" className="w-4 h-4" />
-                            <span className="text-sm">Tap for Details</span>
-                          </div>
-                        </div>
-                      </div>
+                    if (savedWeek) {
+                        setCurrentWeek(parseInt(savedWeek));
+                    }
+                    
+                    if (savedCompletedWorkouts) {
+                        setCompletedWorkouts(new Set(JSON.parse(savedCompletedWorkouts)));
+                    }
+                } catch (error) {
+                    setStorageAvailable(false);
+                }
+            }, []);
+
+            // Save progress whenever currentWeek changes
+            useEffect(() => {
+                try {
+                    localStorage.setItem('skiTouringCurrentWeek', currentWeek.toString());
+                } catch (error) {
+                    // Silently fail if localStorage not available
+                }
+            }, [currentWeek]);
+
+            // Save progress whenever completedWorkouts changes
+            useEffect(() => {
+                try {
+                    localStorage.setItem('skiTouringCompletedWorkouts', JSON.stringify([...completedWorkouts]));
+                } catch (error) {
+                    // Silently fail if localStorage not available
+                }
+            }, [completedWorkouts]);
+
+            // Clear all progress function
+            const clearProgress = () => {
+                try {
+                    localStorage.removeItem('skiTouringCurrentWeek');
+                    localStorage.removeItem('skiTouringCompletedWorkouts');
+                    setCurrentWeek(1);
+                    setCompletedWorkouts(new Set());
+                } catch (error) {
+                    // If localStorage not available, just reset state
+                    setCurrentWeek(1);
+                    setCompletedWorkouts(new Set());
+                }
+            };
+
+            // Detailed workout library
+            const workoutLibrary = {
+                // Monday - Rest & Mobility
+                'Rest Day Recovery + Hip/Ankle Mobility': {
+                    warmup: "5min gentle walk or easy movement to assess how body feels",
+                    main: [
+                        "Hip flexor stretches: 3x45sec each leg",
+                        "Ankle circles + calf stretches: 5min total",
+                        "Light foam rolling: IT band, quads, calves (8min)",
+                        "Gentle spinal twists: 5 each direction",
+                        "Deep breathing: 3min relaxation"
+                    ],
+                    cooldown: "Complete rest - this IS your recovery day"
+                },
+                
+                'Active Recovery + Fascial Release': {
+                    warmup: "5min gentle movement assessment",
+                    main: [
+                        "Light fascial release: legs focus (10min)",
+                        "Hip and glute stretches: 8min",
+                        "Shoulder mobility: wall slides, doorway stretch (5min)",
+                        "Gentle yoga flow: 10min",
+                        "Meditation/visualization: 5min"
+                    ],
+                    cooldown: "Complete relaxation and mental preparation"
+                },
+
+                'Rest + Impact Recovery Protocol': {
+                    warmup: "5min gentle assessment movements",
+                    main: [
+                        "Targeted fascial release: legs focus (12min)",
+                        "Impact recovery stretches: calves, quads (8min)",
+                        "Gentle movement flow: 10min",
+                        "Self-massage with tools: 10min",
+                        "Relaxation breathing: 5min"
+                    ],
+                    cooldown: "Complete relaxation sequence"
+                },
+
+                'Pre-Season Recovery + Mental Prep': {
+                    warmup: "5min gentle movement check-in",
+                    main: [
+                        "Movement preparation sequence: 15min",
+                        "Mental preparation and visualization: 15min",
+                        "Complete relaxation: 5min"
+                    ],
+                    cooldown: "Rest and season readiness"
+                },
+
+                // Tuesday - Gym Day
+                'Gym: Step-ups + Pull-ups + Single-leg Foundation': {
+                    warmup: "8min dynamic warm-up: 1min march in place → 20 arm circles each direction → 10 leg swings each leg (front/back) → 10 leg swings each leg (side to side) → 8 walking lunges with reach → 8 bodyweight squats → 30sec easy step-ups each leg",
+                    main: [
+                        "Weighted step-ups 18-24\": 3x12 each leg (10-20lb pack)",
+                        "Pull-ups or assisted: 4x5-8 reps",
+                        "Single-leg glute bridges: 3x10 each side",
+                        "Bulgarian split squats: 3x8 each leg",
+                        "Plank: 3x30-45 seconds",
+                        "Face pulls (shoulder health): 2x15"
+                    ],
+                    cooldown: "Hip flexor stretch, calf stretch, upper back stretch, 5min easy walk"
+                },
+                
+                'Gym: Jump Prep + Eccentric Loading + Rows': {
+                    warmup: "10min progressive warm-up: 2min easy walk → 10 arm swings each direction → 8 bodyweight squats → 6 walking lunges each leg → 10 calf raises → 5 small hops in place → 5 easy step-ups each leg → 30sec light marching",
+                    main: [
+                        "Box steps (controlled): 3x8 each leg",
+                        "Eccentric squats (3sec down): 3x8",
+                        "Bent-over rows: 3x10",
+                        "Nordic hamstring curls (assisted): 3x3-5",
+                        "Jump prep: Small hops 2x10",
+                        "Overhead press: 3x8"
+                    ],
+                    cooldown: "Quad stretch, hamstring stretch, shoulder stretch, foam roll legs"
+                },
+
+                'Gym: Weighted Step-ups + Pull-ups + Plyometrics': {
+                    warmup: "10min progressive: 2min walk → joint mobility → bodyweight movements → light plyometric prep → practice movements",
+                    main: [
+                        "Weighted step-ups: 4x10 each leg (15-25lb pack)",
+                        "Pull-ups: 4x6-10 reps (add weight if possible)", 
+                        "Box jumps: 3x5 (focus on soft landing)",
+                        "Lateral bounds: 3x6 each direction",
+                        "Single-leg deadlifts: 3x8 each leg",
+                        "Push-ups: 3x10-15"
+                    ],
+                    cooldown: "Deep calf stretch, IT band roll, quad stretch, upper body stretch"
+                },
+
+                'Gym: Single-leg Power + Nordic Curls + Rows': {
+                    warmup: "12min activation: easy movement → joint mobility → activation exercises → power prep movements",
+                    main: [
+                        "Single-leg box step-ups (explosive): 4x6 each leg",
+                        "Nordic hamstring curls: 4x3-6 reps",
+                        "Single-arm rows: 3x8 each arm", 
+                        "Lateral lunges: 3x8 each direction",
+                        "Calf raises (single leg): 3x12 each",
+                        "Pull-ups: 3x6-10"
+                    ],
+                    cooldown: "Deep hamstring stretch, calf stretch, hip flexor release, upper back mobility"
+                },
+
+                'Gym: Drop Jumps + Pistol Squats + Weighted Pulls': {
+                    warmup: "12min progressive: easy movement → joint prep → plyometric activation → practice jumps",
+                    main: [
+                        "Drop jumps: 4x3 from 12-18\" box (focus on absorption)",
+                        "Pistol squat progression: 3x3-5 each leg",
+                        "Weighted pull-ups: 4x5-8 (+10-25lbs)",
+                        "Depth jumps: 3x3 (advanced - only if comfortable)",
+                        "Nordic hamstring curls: 3x3-5 (eccentric focus)"
+                    ],
+                    cooldown: "Fascial release: calves, quads, glutes - 15min"
+                },
+
+                'Gym: Multi-plane Power + Max Strength': {
+                    warmup: "12min dynamic warm-up with multi-directional movement prep",
+                    main: [
+                        "Lateral bounds: 4x5 each direction",
+                        "Single-leg deadlifts (slow eccentric): 3x6 each",
+                        "Rotational step-ups: 3x8 each leg",
+                        "Eccentric pull-ups (5sec down): 3x3-5",
+                        "Multi-directional lunges: 3x6 each direction"
+                    ],
+                    cooldown: "Full leg fascial release, deep stretching - 15min"
+                },
+
+                'Gym: Maintenance Strength + Neural Activation': {
+                    warmup: "8min easy movement prep and activation",
+                    main: [
+                        "Light box jumps: 3x3 (maintenance only)",
+                        "Bodyweight step-ups: 3x8 each leg",
+                        "Pull-ups: 3x5-8 (maintenance volume)",
+                        "Single-leg glute bridges: 2x10 each",
+                        "Activation exercises: 10min"
+                    ],
+                    cooldown: "Light stretching, relaxation focus"
+                },
+
+                'Gym: Light Power + Movement Quality': {
+                    warmup: "8min gentle activation and movement prep",
+                    main: [
+                        "Fast bodyweight squats: 3x5",
+                        "Explosive step-ups: 3x3 each leg",
+                        "Pull-ups (fast concentric): 3x3-5",
+                        "Jump prep: 2x5 small jumps",
+                        "Movement quality work: 15min"
+                    ],
+                    cooldown: "Easy stretching, mental preparation"
+                },
+
+                // Wednesday - Trail Run/Ski
+                'Trail Run: Skinning Pace Base Build': {
+                    warmup: "12min progressive warm-up: 3min flat easy running → 2min slight incline → 1min moderate incline → 30sec faster pace → back to easy × 2 rounds → 2min at target skinning pace to confirm intensity",
+                    main: [
+                        "60min steady trail run (uphill focus when possible)",
+                        "Target: nose breathing only (conversational pace)",
+                        "Simulate skinning rhythm: steady, sustainable effort",
+                        "Focus on efficient uphill running technique"
+                    ],
+                    cooldown: "5min easy walk/jog, dynamic stretching, hydrate"
+                },
+
+                'Trail Run: Tempo Intervals + Base': {
+                    warmup: "15min progressive: easy run → strides → tempo pace practice",
+                    main: [
+                        "15min easy base running",
+                        "5x6min tempo intervals at touring pace (Zone 2-3)",
+                        "2min easy recovery between intervals", 
+                        "15min easy base running to finish",
+                        "Total: 75min with quality tempo work"
+                    ],
+                    cooldown: "10min easy cool-down jog, full leg stretching"
+                },
+
+                'Trail Run: VO2 Intervals (simulate hard touring)': {
+                    warmup: "20min progressive build including some tempo pace practice",
+                    main: [
+                        "6x4min intervals at VO2max pace (Zone 4-5)",
+                        "3min recovery between intervals",
+                        "Simulate steep touring or exposed terrain pace",
+                        "Should be challenging but sustainable for interval duration"
+                    ],
+                    cooldown: "15min easy cool-down, deep breathing"
+                },
+
+                'Trail Run: Openers + Skills Practice': {
+                    warmup: "15min progressive warm-up",
+                    main: [
+                        "3x5min tempo efforts at touring pace",
+                        "3min recovery between efforts",
+                        "Purpose: neural activation, not fatigue",
+                        "Should feel smooth and controlled",
+                        "Practice efficient movement patterns"
+                    ],
+                    cooldown: "10min easy cool-down"
+                },
+
+                // Friday - Optional Run + Mobility
+                'Optional Easy Run + Mobility Flow': {
+                    warmup: "If running: 8min easy build. If mobility only: 5min gentle movement",
+                    main: [
+                        "OPTION A: 30min easy recovery run + 15min mobility",
+                        "OPTION B: Skip run, do 45min comprehensive mobility",
+                        "Mobility focus: hips, ankles, shoulders, spine",
+                        "This day is about feeling good, not training hard"
+                    ],
+                    cooldown: "Complete relaxation, prepare for big Saturday"
+                },
+
+                'Optional Run: Fat-burning Pace + Mobility': {
+                    warmup: "If running: 10min very easy build. If mobility only: gentle assessment",
+                    main: [
+                        "OPTION A: 35min easy fat-burning pace run + 15min mobility",
+                        "OPTION B: 50min comprehensive mobility session",
+                        "Focus: active recovery and tissue preparation",
+                        "Listen to your body - rest if needed"
+                    ],
+                    cooldown: "Extended stretching after PM session"
+                },
+
+                'Optional Easy Run + Movement Prep': {
+                    warmup: "If running: 8min easy. If mobility only: movement assessment",
+                    main: [
+                        "OPTION A: 30min easy recovery run + 20min movement prep",
+                        "OPTION B: 50min movement preparation session",
+                        "Focus: preparing body for peak training",
+                        "Should feel refreshing and energizing"
+                    ],
+                    cooldown: "Complete preparation for weekend"
+                },
+
+                'Optional Easy Run + Final Prep': {
+                    warmup: "If running: 6min very easy. If prep only: gentle assessment",
+                    main: [
+                        "OPTION A: 25min easy run + 15min final prep",
+                        "OPTION B: 40min pre-season preparation",
+                        "Focus: final tuning and confidence building",
+                        "Light and energizing only"
+                    ],
+                    cooldown: "Mental and physical readiness check"
+                },
+
+                // Saturday - Long Day
+                'Long Trail Run/Ski (build pack weight)': {
+                    warmup: "15min progressive warm-up with pack: easy movement → gradually build intensity → practice target pace",
+                    main: [
+                        "3-5hr continuous trail running/skiing with pack",
+                        "Week 1-2: 10-15lbs, Week 3-4: 15-20lbs", 
+                        "Mix terrain: uphills, flats, technical sections",
+                        "Practice nutrition every 45-60min",
+                        "Focus on sustainable pacing for long efforts"
+                    ],
+                    cooldown: "20min walking cool-down, comprehensive stretching, refuel properly"
+                },
+
+                'Long Adventure Run/Ski (4-5hrs)': {
+                    warmup: "15min progressive warm-up with pack",
+                    main: [
+                        "4-5hr continuous movement with 15-25lb pack",
+                        "Mix running/skiing: uphills, technical terrain",
+                        "Include 2-3 'rest stops' (5min each)",
+                        "Last 2 hours: practice steady skinning pace",
+                        "Eat/drink as you would on tour"
+                    ],
+                    cooldown: "20min walking cooldown, full leg stretching routine"
+                },
+
+                'Peak Long Day Run/Ski (5-6+ hours)': {
+                    warmup: "20min progressive warm-up with full pack",
+                    main: [
+                        "5-6+ hour adventure with 20-30lb pack",
+                        "Simulate full touring day demands",
+                        "Include elevation gain/loss if possible",
+                        "Practice pacing for sustained effort",
+                        "Mental training: stay focused for long duration"
+                    ],
+                    cooldown: "25min cool-down walk, comprehensive stretching"
+                },
+
+                'Moderate Adventure Run/Ski': {
+                    warmup: "15min moderate warm-up with light pack",
+                    main: [
+                        "3hr moderate adventure with 15-20lb pack",
+                        "Taper volume while maintaining movement quality",
+                        "Focus on efficiency and enjoyment",
+                        "Practice final pre-season skills"
+                    ],
+                    cooldown: "Relaxed cool-down and preparation"
+                },
+
+                // Sunday - Optional Easy + Recovery
+                'Optional Easy Run + Deep Recovery': {
+                    warmup: "If running: 5min very easy. If recovery only: gentle assessment movements",
+                    main: [
+                        "OPTION A: 30-45min very easy recovery run/ski + 30min recovery work",
+                        "OPTION B: Skip activity, do 60min full recovery protocol",
+                        "Recovery focus: foam rolling, stretching, relaxation", 
+                        "Listen to your body - rest if needed"
+                    ],
+                    cooldown: "Complete rest and preparation for the week ahead"
+                },
+
+                'Optional Easy Run + Full Body Recovery': {
+                    warmup: "If running: 5min very gentle start. If recovery only: assessment",
+                    main: [
+                        "OPTION A: 40min very easy movement + 30min recovery",
+                        "OPTION B: 70min comprehensive recovery protocol",
+                        "Full body focus: legs, shoulders, spine",
+                        "Should feel refreshing, not tiring"
+                    ],
+                    cooldown: "Gentle relaxation, week preparation"
+                },
+
+                'Optional Recovery Run + Deep Restoration': {
+                    warmup: "If running: very gentle movement start. If recovery only: assessment",
+                    main: [
+                        "OPTION A: 30min easy recovery movement + 45min restoration",
+                        "OPTION B: 75min deep restoration protocol", 
+                        "Focus: comprehensive recovery from peak training",
+                        "Prepare body and mind for upcoming week"
+                    ],
+                    cooldown: "Complete rest and restoration"
+                },
+
+                'Complete Recovery + Season Readiness': {
+                    warmup: "Gentle movement check-in and assessment",
+                    main: [
+                        "OPTION A: 30min easy movement + 30min season prep",
+                        "OPTION B: 60min complete season preparation",
+                        "Mental and physical readiness protocols",
+                        "Visualization and confidence building"
+                    ],
+                    cooldown: "Rest and complete season readiness"
+                }
+            };
+
+            // Training phases
+            const getTrainingPhase = (week) => {
+                if (week <= 4) return { name: "Base Building", color: "bg-blue-500" };
+                if (week <= 8) return { name: "Aerobic Development", color: "bg-green-500" };
+                if (week <= 12) return { name: "Strength & Power", color: "bg-orange-500" };
+                return { name: "Peak & Taper", color: "bg-purple-500" };
+            };
+
+            // Workout templates
+            const workoutTemplates = {
+                aerobicBase: {
+                    name: "Trail Run/Ski",
+                    icon: React.createElement(Mountain, { className: "w-5 h-5" }),
+                    description: "Aerobic base & tempo work"
+                },
+                highVolume: {
+                    name: "Long Adventure",
+                    icon: React.createElement(Clock, { className: "w-5 h-5" }),
+                    description: "Long day preparation"
+                },
+                strength: {
+                    name: "Gym Training",
+                    icon: React.createElement(Dumbbell, { className: "w-5 h-5" }),
+                    description: "Strength & power work"
+                },
+                mobility: {
+                    name: "Rest & Recovery",
+                    icon: React.createElement(Activity, { className: "w-5 h-5" }),
+                    description: "Mobility & restoration"
+                }
+            };
+
+            // Weekly schedule generator
+            const generateWeekSchedule = (week) => {
+                const schedule = [];
+                
+                // Base Building Phase (Weeks 1-4)
+                if (week <= 4) {
+                    schedule.push(
+                        { day: 'Monday', type: 'mobility', workout: 'Rest Day Recovery + Hip/Ankle Mobility', duration: 30 },
+                        { day: 'Tuesday', type: 'strength', workout: 'Gym: Step-ups + Pull-ups + Single-leg Foundation', duration: 60 },
+                        { day: 'Wednesday', type: 'aerobicBase', workout: 'Trail Run: Skinning Pace Base Build', duration: 60 },
+                        { day: 'Thursday', type: 'strength', workout: 'Gym: Jump Prep + Eccentric Loading + Rows', duration: 55 },
+                        { day: 'Friday', type: 'aerobicBase', workout: 'Optional Easy Run + Mobility Flow', duration: 45 },
+                        { day: 'Saturday', type: 'highVolume', workout: 'Long Trail Run/Ski (build pack weight)', duration: 180 + (week * 20) },
+                        { day: 'Sunday', type: 'mobility', workout: 'Optional Easy Run + Deep Recovery', duration: 60 }
                     );
-                  })}
-                </div>
-              </div>
+                }
+                
+                // Aerobic Development (Weeks 5-8)
+                else if (week <= 8) {
+                    schedule.push(
+                        { day: 'Monday', type: 'mobility', workout: 'Active Recovery + Fascial Release', duration: 35 },
+                        { day: 'Tuesday', type: 'strength', workout: 'Gym: Weighted Step-ups + Pull-ups + Plyometrics', duration: 65 },
+                        { day: 'Wednesday', type: 'aerobicBase', workout: 'Trail Run: Tempo Intervals + Base', duration: 75 },
+                        { day: 'Thursday', type: 'strength', workout: 'Gym: Single-leg Power + Nordic Curls + Rows', duration: 60 },
+                        { day: 'Friday', type: 'aerobicBase', workout: 'Optional Run: Fat-burning Pace + Mobility', duration: 50 },
+                        { day: 'Saturday', type: 'highVolume', workout: 'Long Adventure Run/Ski (4-5hrs)', duration: 240 + (week * 15) },
+                        { day: 'Sunday', type: 'mobility', workout: 'Optional Easy Run + Full Body Recovery', duration: 70 }
+                    );
+                }
+                
+                // Strength & Power (Weeks 9-12)
+                else if (week <= 12) {
+                    schedule.push(
+                        { day: 'Monday', type: 'mobility', workout: 'Rest + Impact Recovery Protocol', duration: 40 },
+                        { day: 'Tuesday', type: 'strength', workout: 'Gym: Drop Jumps + Pistol Squats + Weighted Pulls', duration: 70 },
+                        { day: 'Wednesday', type: 'aerobicBase', workout: 'Trail Run: VO2 Intervals (simulate hard touring)', duration: 70 },
+                        { day: 'Thursday', type: 'strength', workout: 'Gym: Multi-plane Power + Max Strength', duration: 65 },
+                        { day: 'Friday', type: 'aerobicBase', workout: 'Optional Easy Run + Movement Prep', duration: 50 },
+                        { day: 'Saturday', type: 'highVolume', workout: 'Peak Long Day Run/Ski (5-6+ hours)', duration: 360 },
+                        { day: 'Sunday', type: 'mobility', workout: 'Optional Recovery Run + Deep Restoration', duration: 75 }
+                    );
+                }
+                
+                // Peak & Taper (Weeks 13+)
+                else {
+                    schedule.push(
+                        { day: 'Monday', type: 'mobility', workout: 'Pre-Season Recovery + Mental Prep', duration: 35 },
+                        { day: 'Tuesday', type: 'strength', workout: 'Gym: Maintenance Strength + Neural Activation', duration: 50 },
+                        { day: 'Wednesday', type: 'aerobicBase', workout: 'Trail Run: Openers + Skills Practice', duration: 60 },
+                        { day: 'Thursday', type: 'strength', workout: 'Gym: Light Power + Movement Quality', duration: 45 },
+                        { day: 'Friday', type: 'aerobicBase', workout: 'Optional Easy Run + Final Prep', duration: 40 },
+                        { day: 'Saturday', type: 'highVolume', workout: 'Moderate Adventure Run/Ski', duration: 180 },
+                        { day: 'Sunday', type: 'mobility', workout: 'Complete Recovery + Season Readiness', duration: 60 }
+                    );
+                }
+                
+                return schedule;
+            };
 
-              {/* Workout Detail Modal */}
-              {selectedWorkout && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                  <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                    <div className="p-6">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-xl font-bold text-gray-800">
-                          {selectedWorkout.day} - {selectedWorkout.workout}
-                        </h3>
-                        <button
-                          onClick={() => setSelectedWorkout(null)}
-                          className="text-gray-500 hover:text-gray-700 text-2xl font-bold min-h-11 min-w-11"
-                        >
-                          ×
-                        </button>
-                      </div>
-                      
-                      {(() => {
-                        const details = getWorkoutDetails(selectedWorkout.workout);
-                        return (
-                          <div className="space-y-6">
-                            <div className="flex items-center space-x-4 text-sm text-gray-600">
-                              <div className="flex items-center">
-                                <Icon name="Clock" className="w-4 h-4 mr-1" />
-                                {selectedWorkout.duration} minutes
-                              </div>
-                              <div className="flex items-center">
-                                {workoutTemplates[selectedWorkout.type].icon}
-                                <span className="ml-1">{workoutTemplates[selectedWorkout.type].name}</span>
-                              </div>
-                            </div>
+            const currentPhase = getTrainingPhase(currentWeek);
+            const weekSchedule = generateWeekSchedule(currentWeek);
+            
+            const toggleWorkoutCompletion = (workoutId) => {
+                const newCompleted = new Set(completedWorkouts);
+                if (newCompleted.has(workoutId)) {
+                    newCompleted.delete(workoutId);
+                } else {
+                    newCompleted.add(workoutId);
+                }
+                setCompletedWorkouts(newCompleted);
+            };
 
-                            <div className="bg-blue-50 p-4 rounded-lg">
-                              <h4 className="font-semibold text-blue-800 mb-2">Warm-up</h4>
-                              <p className="text-blue-700 text-sm">{details.warmup}</p>
-                            </div>
+            const getCompletionRate = () => {
+                const totalWorkouts = weekSchedule.length;
+                const completed = weekSchedule.filter(w => 
+                    completedWorkouts.has(`${currentWeek}-${w.day}`)
+                ).length;
+                return Math.round((completed / totalWorkouts) * 100);
+            };
 
-                            <div className="bg-orange-50 p-4 rounded-lg">
-                              <h4 className="font-semibold text-orange-800 mb-3">Main Workout</h4>
-                              <div className="space-y-2">
-                                {details.main.map((exercise, idx) => (
-                                  <div key={idx} className="flex items-start space-x-2">
-                                    <span className="text-orange-600 font-medium">{idx + 1}.</span>
-                                    <span className="text-orange-700 text-sm">{exercise}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
+            const getWorkoutDetails = (workoutName) => {
+                return workoutLibrary[workoutName] || {
+                    warmup: "General warm-up appropriate for workout type",
+                    main: ["Follow workout template guidelines"],
+                    cooldown: "Cool down and stretch targeted muscle groups"
+                };
+            };
 
-                            <div className="bg-green-50 p-4 rounded-lg">
-                              <h4 className="font-semibold text-green-800 mb-2">Cool-down</h4>
-                              <p className="text-green-700 text-sm">{details.cooldown}</p>
-                            </div>
+            return React.createElement('div', { className: "max-w-4xl mx-auto p-6 bg-gray-50 min-h-screen" }, [
+                // Header
+                React.createElement('div', { key: 'header', className: "bg-white rounded-lg shadow-lg p-6 mb-6" }, [
+                    React.createElement('div', { key: 'header-content', className: "flex items-center justify-between" }, [
+                        React.createElement('div', { key: 'title' }, [
+                            React.createElement('h1', { key: 'h1', className: "text-3xl font-bold text-gray-800 mb-2" }, "Ski Touring Prep Training"),
+                            React.createElement('p', { key: 'subtitle', className: "text-gray-600" }, "Inspired by Cascade Endurance, 100mile Kyle & Mountainfit")
+                        ]),
+                        React.createElement(Mountain, { key: 'mountain-icon', className: "w-12 h-12 text-blue-600" })
+                    ]),
+                    
+                    React.createElement('div', { key: 'phase-info', className: "mt-4 flex items-center justify-between" }, [
+                        React.createElement('div', { key: 'phase-left', className: "flex items-center space-x-4" }, [
+                            React.createElement('div', { key: 'phase-badge', className: `${currentPhase.color} text-white px-4 py-2 rounded-full text-sm font-medium` }, 
+                                `Week ${currentWeek}: ${currentPhase.name}`),
+                            React.createElement('div', { key: 'completion', className: "text-sm text-gray-600" }, 
+                                `Completion: ${getCompletionRate()}%`)
+                        ]),
+                        
+                        React.createElement('div', { key: 'progress-mgmt', className: "flex items-center space-x-2" }, [
+                            !storageAvailable && React.createElement('div', { key: 'warning', className: "text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded" }, "Progress saves locally"),
+                            React.createElement('button', { 
+                                key: 'reset',
+                                onClick: clearProgress,
+                                className: "text-xs text-gray-500 hover:text-gray-700 underline"
+                            }, "Reset Progress")
+                        ])
+                    ])
+                ]),
 
-                            <div className="flex justify-between items-center pt-4 border-t">
-                              <button
-                                onClick={() => setSelectedWorkout(null)}
-                                className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 min-h-11"
-                              >
-                                Close
-                              </button>
-                              <button
-                                onClick={() => {
-                                  const workoutId = `${currentWeek}-${selectedWorkout.day}`;
-                                  toggleWorkoutCompletion(workoutId);
-                                  setSelectedWorkout(null);
-                                }}
-                                className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center space-x-2 min-h-11"
-                              >
-                                <Icon name="CheckCircle2" className="w-4 h-4" />
-                                <span>Mark Complete</span>
-                              </button>
-                            </div>
-                          </div>
-                        );
-                      })()}
-                    </div>
-                  </div>
-                </div>
-              )}
+                // Week Navigation
+                React.createElement('div', { key: 'navigation', className: "bg-white rounded-lg shadow-lg p-6 mb-6" }, [
+                    React.createElement('div', { key: 'nav-header', className: "flex items-center justify-between mb-4" }, [
+                        React.createElement('h2', { key: 'nav-title', className: "text-xl font-semibold" }, "Training Week"),
+                        React.createElement('div', { key: 'nav-buttons', className: "flex space-x-2" }, [
+                            React.createElement('button', { 
+                                key: 'prev',
+                                onClick: () => setCurrentWeek(Math.max(1, currentWeek - 1)),
+                                className: "px-3 py-1 bg-gray-200 rounded hover:bg-gray-300",
+                                disabled: currentWeek === 1
+                            }, "Previous"),
+                            React.createElement('span', { key: 'current', className: "px-4 py-1 bg-blue-100 rounded font-medium" }, `Week ${currentWeek}`),
+                            React.createElement('button', { 
+                                key: 'next',
+                                onClick: () => setCurrentWeek(currentWeek + 1),
+                                className: "px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                            }, "Next")
+                        ])
+                    ]),
+                    
+                    React.createElement('div', { key: 'phase-desc', className: "text-sm text-gray-600 mb-4" }, 
+                        currentPhase.name === "Base Building" ? "Focus: Skinning pace aerobic base, single-leg strength foundation, fascial preparation" :
+                        currentPhase.name === "Aerobic Development" ? "Focus: Long day endurance, weighted step-ups, plyometric preparation, back-to-back sessions" :
+                        currentPhase.name === "Strength & Power" ? "Focus: Drop jump readiness, multi-plane power, peak long days (5-6+ hours), impact preparation" :
+                        "Focus: Maintaining fitness while preparing legs/fascia for touring season demands")
+                ]),
 
-              {/* Footer */}
-              <div className="mt-8 text-center text-sm text-gray-500">
-                <p>Training philosophy inspired by proven endurance coaching methods</p>
-                <p className="mt-1">Adjust intensity and volume based on your fitness level and goals</p>
-              </div>
-            </div>
-          );
+                // Weekly Schedule
+                React.createElement('div', { key: 'schedule', className: "bg-white rounded-lg shadow-lg p-6 mb-6" }, [
+                    React.createElement('h3', { key: 'schedule-title', className: "text-xl font-semibold mb-4" }, "This Week's Training"),
+                    React.createElement('div', { key: 'workout-grid', className: "grid gap-4 md:grid-cols-2 lg:grid-cols-3" }, 
+                        weekSchedule.map((workout, index) => {
+                            const workoutId = `${currentWeek}-${workout.day}`;
+                            const isCompleted = completedWorkouts.has(workoutId);
+                            const workoutType = workoutTemplates[workout.type];
+                            
+                            return React.createElement('div', { 
+                                key: index,
+                                className: `border rounded-lg p-4 transition-all cursor-pointer hover:shadow-lg ${isCompleted ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200 hover:border-blue-300'}`,
+                                onClick: () => setSelectedWorkout(workout)
+                            }, [
+                                React.createElement('div', { key: 'workout-header', className: "flex items-center justify-between mb-3" }, [
+                                    React.createElement('div', { key: 'workout-info', className: "flex items-center space-x-2" }, [
+                                        workoutType.icon,
+                                        React.createElement('span', { key: 'day', className: "font-medium text-gray-700" }, workout.day)
+                                    ]),
+                                    React.createElement('button', { 
+                                        key: 'complete-btn',
+                                        onClick: (e) => {
+                                            e.stopPropagation();
+                                            toggleWorkoutCompletion(workoutId);
+                                        },
+                                        className: "text-green-600 hover:text-green-700"
+                                    }, isCompleted ? React.createElement(CheckCircle2, { className: "w-5 h-5" }) : React.createElement(Circle, { className: "w-5 h-5" }))
+                                ]),
+                                
+                                React.createElement('h4', { key: 'workout-name', className: "font-semibold text-gray-800 mb-2" }, workout.workout),
+                                React.createElement('p', { key: 'workout-type', className: "text-sm text-gray-600 mb-3" }, workoutType.name),
+                                
+                                React.createElement('div', { key: 'workout-duration', className: "flex items-center text-sm text-gray-500 mb-4" }, [
+                                    React.createElement(Clock, { className: "w-4 h-4 mr-1" }),
+                                    `${workout.duration} min`
+                                ]),
+                                
+                                React.createElement('div', { key: 'tap-details', className: "mt-4 pt-3 border-t border-gray-200" }, 
+                                    React.createElement('div', { className: "flex items-center justify-center space-x-2 text-blue-600 font-medium" }, [
+                                        React.createElement(Play, { className: "w-4 h-4" }),
+                                        React.createElement('span', {}, "Tap for Full Workout Details")
+                                    ])
+                                )
+                            ]);
+                        })
+                    )
+                ]),
+
+                // Workout Detail Modal
+                selectedWorkout && React.createElement('div', { key: 'modal', className: "fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" }, 
+                    React.createElement('div', { className: "bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto" }, 
+                        React.createElement('div', { className: "p-6" }, (() => {
+                            const details = getWorkoutDetails(selectedWorkout.workout);
+                            return [
+                                React.createElement('div', { key: 'modal-header', className: "flex items-center justify-between mb-4" }, [
+                                    React.createElement('h3', { key: 'modal-title', className: "text-2xl font-bold text-gray-800" }, 
+                                        `${selectedWorkout.day} - ${selectedWorkout.workout}`),
+                                    React.createElement('button', { 
+                                        key: 'close-btn',
+                                        onClick: () => setSelectedWorkout(null),
+                                        className: "text-gray-500 hover:text-gray-700 text-2xl font-bold"
+                                    }, "×")
+                                ]),
+                                
+                                React.createElement('div', { key: 'modal-meta', className: "flex items-center space-x-4 text-sm text-gray-600 mb-6" }, [
+                                    React.createElement('div', { key: 'duration-info', className: "flex items-center" }, [
+                                        React.createElement(Clock, { className: "w-4 h-4 mr-1" }),
+                                        `${selectedWorkout.duration} minutes`
+                                    ]),
+                                    React.createElement('div', { key: 'type-info', className: "flex items-center" }, [
+                                        workoutTemplates[selectedWorkout.type].icon,
+                                        React.createElement('span', { className: "ml-1" }, workoutTemplates[selectedWorkout.type].name)
+                                    ])
+                                ]),
+
+                                React.createElement('div', { key: 'warmup-section', className: "bg-blue-50 p-4 rounded-lg mb-6" }, [
+                                    React.createElement('h4', { key: 'warmup-title', className: "font-semibold text-blue-800 mb-2" }, "Warm-up"),
+                                    React.createElement('p', { key: 'warmup-content', className: "text-blue-700" }, details.warmup)
+                                ]),
+
+                                React.createElement('div', { key: 'main-section', className: "bg-orange-50 p-4 rounded-lg mb-6" }, [
+                                    React.createElement('h4', { key: 'main-title', className: "font-semibold text-orange-800 mb-3" }, "Main Workout"),
+                                    React.createElement('div', { key: 'main-content', className: "space-y-2" }, 
+                                        details.main.map((exercise, idx) => 
+                                            React.createElement('div', { key: idx, className: "flex items-start space-x-2" }, [
+                                                React.createElement('span', { key: 'number', className: "text-orange-600 font-medium" }, `${idx + 1}.`),
+                                                React.createElement('span', { key: 'exercise', className: "text-orange-700" }, exercise)
+                                            ])
+                                        )
+                                    )
+                                ]),
+
+                                React.createElement('div', { key: 'cooldown-section', className: "bg-green-50 p-4 rounded-lg mb-6" }, [
+                                    React.createElement('h4', { key: 'cooldown-title', className: "font-semibold text-green-800 mb-2" }, "Cool-down"),
+                                    React.createElement('p', { key: 'cooldown-content', className: "text-green-700" }, details.cooldown)
+                                ]),
+
+                                React.createElement('div', { key: 'modal-footer', className: "flex justify-between items-center pt-4 border-t" }, [
+                                    React.createElement('button', { 
+                                        key: 'close-footer',
+                                        onClick: () => setSelectedWorkout(null),
+                                        className: "px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                                    }, "Close"),
+                                    React.createElement('button', { 
+                                        key: 'mark-complete',
+                                        onClick: () => {
+                                            const workoutId = `${currentWeek}-${selectedWorkout.day}`;
+                                            toggleWorkoutCompletion(workoutId);
+                                            setSelectedWorkout(null);
+                                        },
+                                        className: "px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center space-x-2"
+                                    }, [
+                                        React.createElement(CheckCircle2, { key: 'check-icon', className: "w-4 h-4" }),
+                                        React.createElement('span', { key: 'check-text' }, "Mark Complete")
+                                    ])
+                                ])
+                            ];
+                        })())
+                    )
+                ),
+
+                // Footer
+                React.createElement('div', { key: 'footer', className: "mt-8 text-center text-sm text-gray-500" }, [
+                    React.createElement('p', { key: 'footer-1' }, "Training philosophy inspired by proven endurance coaching methods"),
+                    React.createElement('p', { key: 'footer-2', className: "mt-1" }, "Adjust intensity and volume based on your fitness level and goals")
+                ])
+            ]);
         };
-
-        // Hide loading error since app loaded successfully
-        document.getElementById('loading-error').style.display = 'none';
 
         // Render the app
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<SkiTouringPrepApp />);
-
-        // Hide splash screen after loading
-        setTimeout(() => {
-          const splash = document.getElementById('splash-screen');
-          if (splash) {
-            splash.classList.add('fade-out');
-            setTimeout(() => {
-              splash.style.display = 'none';
-            }, 500);
-          }
-        }, 1500);
-
-    </script>
-
-    <script>
-        // PWA Installation prompt
-        let deferredPrompt;
-        
-        window.addEventListener('beforeinstallprompt', (e) => {
-          e.preventDefault();
-          deferredPrompt = e;
-          
-          const button = document.createElement('button');
-          button.className = 'install-button';
-          button.innerHTML = '📱 Add to Home Screen';
-          
-          button.addEventListener('click', async () => {
-            if (deferredPrompt) {
-              deferredPrompt.prompt();
-              const { outcome } = await deferredPrompt.userChoice;
-              console.log(outcome === 'accepted' ? 'User installed PWA' : 'User dismissed prompt');
-              deferredPrompt = null;
-              button.remove();
-            }
-          });
-          
-          document.body.appendChild(button);
-          
-          // Auto-hide install button after 15 seconds
-          setTimeout(() => {
-            if (button.parentNode) {
-              button.style.opacity = '0';
-              setTimeout(() => button.remove(), 300);
-            }
-          }, 15000);
-        });
-
-        // Basic service worker for PWA functionality
-        if ('serviceWorker' in navigator) {
-          window.addEventListener('load', () => {
-            const swCode = `
-              const CACHE_NAME = 'ski-prep-v1';
-              const urlsToCache = [self.location.href];
-              
-              self.addEventListener('install', (event) => {
-                event.waitUntil(
-                  caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache))
-                );
-              });
-              
-              self.addEventListener('fetch', (event) => {
-                event.respondWith(
-                  caches.match(event.request).then((response) => {
-                    return response || fetch(event.request);
-                  })
-                );
-              });
-            `;
-            
-            const blob = new Blob([swCode], { type: 'application/javascript' });
-            const swUrl = URL.createObjectURL(blob);
-            
-            navigator.serviceWorker.register(swUrl).then((registration) => {
-              console.log('SW registered: ', registration);
-            }).catch((registrationError) => {
-              console.log('SW registration failed: ', registrationError);
-            });
-          });
-        }
-
-        // Handle offline/online status
-        window.addEventListener('online', () => {
-          console.log('App is online');
-        });
-        
-        window.addEventListener('offline', () => {
-          console.log('App is offline - cached version available');
-        });
-
-        // Error handling
-        window.addEventListener('error', (event) => {
-          console.error('App error:', event.error);
-          document.getElementById('loading-error').style.display = 'block';
-        });
-
-        // Handle unhandled promise rejections
-        window.addEventListener('unhandledrejection', (event) => {
-          console.error('Unhandled promise rejection:', event.reason);
-        });
+        root.render(React.createElement(SkiTouringPrepApp));
     </script>
 </body>
 </html>
