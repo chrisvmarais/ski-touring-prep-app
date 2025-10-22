@@ -19,11 +19,11 @@
             <div class="flex items-center justify-between">
                 <div>
                     <h1 class="text-3xl font-bold text-gray-800 mb-2">Ski Touring Prep Training</h1>
-                    <p class="text-gray-600">Your personalized training schedule</p>
+                    <p class="text-gray-600">Cascade Endurance • 100mile Kyle • Mountainfit</p>
                 </div>
                 <div class="text-4xl">🎿</div>
             </div>
-            <div class="mt-4 flex items-center justify-between">
+            <div class="mt-4 flex items-center justify-between flex-wrap gap-2">
                 <div class="flex items-center space-x-4">
                     <div id="phase-badge" class="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-medium">
                         Week 1: Base Building
@@ -55,13 +55,13 @@
         <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
             <h3 class="text-xl font-semibold mb-4">This Week's Training</h3>
             <div id="workout-grid" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <!-- Workouts will be populated by JavaScript -->
+                <!-- Workouts populated by JavaScript -->
             </div>
         </div>
 
         <!-- Footer -->
         <div class="text-center text-sm text-gray-500">
-            <p>Training philosophy inspired by Cascade Endurance, 100mile Kyle & Mountainfit</p>
+            <p>Your personalized ski touring preparation program</p>
         </div>
     </div>
 
@@ -76,13 +76,18 @@
                 
                 <div id="modal-content"></div>
                 
-                <div class="flex justify-between items-center pt-4 border-t mt-6">
+                <div class="flex justify-between items-center pt-4 border-t mt-6 flex-wrap gap-2">
                     <button onclick="closeModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
                         Close
                     </button>
-                    <button id="complete-btn" class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-                        Mark Complete ✓
-                    </button>
+                    <div class="flex space-x-2">
+                        <button id="add-to-calendar-btn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm">
+                            📅 Add to Calendar
+                        </button>
+                        <button id="complete-btn" class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                            Mark Complete ✓
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -125,226 +130,161 @@
             return { name: "Peak & Taper", color: "bg-purple-500" };
         }
 
-        // Comprehensive workout data following training philosophies
-        const workouts = {
-            // Base Building Phase (Weeks 1-4) - Cascade Endurance Foundation
-            1: {
-                'Monday': { type: 'Rest & Mobility', workout: 'Rest Day Recovery + Hip/Ankle Mobility', duration: 30, 
+        // Base workout templates
+        const baseWorkouts = {
+            week1: {
+                'Monday': {
+                    type: 'Rest & Mobility',
+                    workout: 'Rest Day Recovery + Hip/Ankle Mobility',
+                    duration: 30,
                     warmup: "5min gentle walk or easy movement to assess how body feels from weekend training",
-                    main: ["Hip flexor stretches: 3x45sec each leg (counter skinning position)", "Ankle circles + calf stretches: 5min total (boot prep)", "Light foam rolling: IT band, quads, calves (8min fascial prep)", "Gentle spinal twists: 5 each direction", "Deep breathing: 3min relaxation and recovery"],
-                    cooldown: "Complete rest - this IS your recovery day. Mental preparation for week ahead."
+                    main: [
+                        "Hip Mobility Sequence:",
+                        "• 90/90 hip stretches: 2x60sec each side (internal + external rotation)",
+                        "• Pigeon pose: 2x60sec each side (deep hip flexor and glute stretch)",
+                        "• Hip circles: 10 each direction, both legs",
+                        "• Frog stretch: 2x45sec (groin and inner hip mobility)",
+                        "• Couch stretch: 2x60sec each side (deep hip flexor)",
+                        "Ankle Mobility:",
+                        "• Ankle circles: 20 each direction, both ankles",
+                        "• Calf stretches (straight leg): 3x30sec each",
+                        "• Calf stretches (bent knee): 3x30sec each (soleus focus)",
+                        "Light foam rolling: IT band, quads, calves (8min)",
+                        "Gentle spinal twists: 5 each direction",
+                        "Deep breathing: 3min relaxation"
+                    ],
+                    cooldown: "Complete rest - this IS your recovery day"
                 },
-                'Tuesday': { type: 'Gym Training', workout: 'Step-ups + Pull-ups + Single-leg Foundation', duration: 60,
-                    warmup: "8min dynamic warm-up: 1min march in place → 20 arm circles each direction → 10 leg swings each leg (front/back) → 10 leg swings each leg (side to side) → 8 walking lunges with reach → 8 bodyweight squats → 30sec easy step-ups each leg",
-                    main: ["Weighted step-ups 18-24\": 3x12 each leg (10-15lb pack) - skinning simulation", "Pull-ups or assisted: 4x5-8 reps - upper body balance", "Single-leg glute bridges: 3x10 each side - unilateral strength", "Bulgarian split squats: 3x8 each leg - touring leg strength", "Plank: 3x30-45 seconds - core stability", "Face pulls: 2x15 - shoulder health for pack carrying"],
-                    cooldown: "Hip flexor stretch, calf stretch, upper back stretch, 5min easy walk"
+                'Tuesday': {
+                    type: 'Gym Training',
+                    workout: 'Step-ups + Pull-ups + Single-leg Foundation',
+                    duration: 60,
+                    warmup: "10min dynamic: 1min march → 20 arm circles each direction → 10 leg swings each leg (front/back) → 10 leg swings (side to side) → 8 walking lunges → 6 side squats with curtsy lunge each side → 8 bodyweight squats → 10 lateral hops (5 each direction) → 30sec easy step-ups each leg",
+                    main: [
+                        "Weighted step-ups 18-24\": 3x12 each leg (10-15lb pack)",
+                        "Pull-ups or assisted: 4x5-8 reps",
+                        "Single-leg glute bridges: 3x10 each side",
+                        "Bulgarian split squats: 3x8 each leg",
+                        "Plank: 3x30-45 seconds",
+                        "Face pulls: 2x15 (shoulder health)"
+                    ],
+                    cooldown: "Hip flexor stretch, calf stretch, upper back stretch, 5min walk"
                 },
-                'Wednesday': { type: 'Trail Run', workout: 'Skinning Pace Base Build', duration: 60,
-                    warmup: "12min progressive warm-up: 3min flat easy running → 2min slight incline → 1min moderate incline → 30sec faster pace → back to easy × 2 rounds → 2min at target skinning pace to confirm Zone 1-2 intensity",
-                    main: ["60min steady trail run (uphill focus when possible)", "Target: nose breathing only (conversational pace) - aerobic base", "Simulate skinning rhythm: steady, sustainable effort 60-70 steps/min", "Focus on efficient uphill running technique", "Kyle-style: build aerobic capacity through volume"],
-                    cooldown: "5min easy walk/jog, dynamic stretching, hydrate and refuel"
+                'Wednesday': {
+                    type: 'Trail Run',
+                    workout: 'Skinning Pace Base Build',
+                    duration: 60,
+                    warmup: "15min progressive: 3min flat easy running → 2min slight incline → 8 side squats with curtsy lunge → 10 lateral hops each direction → 1min moderate incline → 30sec faster → back to easy × 2 rounds → 2min at target pace",
+                    main: [
+                        "60min steady trail run (uphill focus)",
+                        "Target: nose breathing only (conversational pace)",
+                        "Simulate skinning rhythm: 60-70 steps/min",
+                        "Focus on efficient uphill technique"
+                    ],
+                    cooldown: "5min easy walk/jog, dynamic stretching, hydrate"
                 },
-                'Thursday': { type: 'Gym Training', workout: 'Jump Prep + Eccentric Loading + Rows', duration: 55,
-                    warmup: "10min progressive warm-up: 2min easy walk → 10 arm swings each direction → 8 bodyweight squats → 6 walking lunges each leg → 10 calf raises → 5 small hops in place → 5 easy step-ups each leg → 30sec light marching",
-                    main: ["Box steps (controlled): 3x8 each leg - fascial preparation", "Eccentric squats (3sec down): 3x8 - strength in lengthening", "Bent-over rows: 3x10 - pull balance for pack carrying", "Nordic hamstring curls (assisted): 3x3-5 - injury prevention", "Jump prep: Small hops 2x10 - plyometric introduction", "Overhead press: 3x8 - functional shoulder strength"],
-                    cooldown: "Quad stretch, hamstring stretch, shoulder stretch, foam roll legs"
+                'Thursday': {
+                    type: 'Gym Training',
+                    workout: 'Jump Prep + Eccentric Loading + Rows',
+                    duration: 55,
+                    warmup: "12min progressive: 2min walk → 10 arm swings each direction → 8 bodyweight squats → 6 walking lunges each leg → 8 side squats with curtsy lunge each side → 10 calf raises → 10 lateral hops (5 each direction) → 5 small hops → 5 step-ups each leg → 30sec marching",
+                    main: [
+                        "Box steps (controlled): 3x8 each leg",
+                        "Eccentric squats (3sec down): 3x8",
+                        "Bent-over rows: 3x10",
+                        "Nordic hamstring curls (assisted): 3x3-5",
+                        "Jump prep: Small hops 2x10",
+                        "Overhead press: 3x8"
+                    ],
+                    cooldown: "Quad stretch, hamstring stretch, shoulder stretch, foam roll"
                 },
-                'Friday': { type: 'Optional Run', workout: 'Optional Easy Run + Mobility Flow', duration: 45,
-                    warmup: "If running: 8min easy build. If mobility only: 5min gentle movement assessment",
-                    main: ["OPTION A: 30min easy recovery run (Zone 1) + 15min mobility", "OPTION B: Skip run, do 45min comprehensive mobility", "Mobility focus: hips, ankles, shoulders, spine", "This day is about feeling good, not training hard", "Prepare body and mind for weekend long session"],
-                    cooldown: "Complete relaxation, prepare for big Saturday adventure"
+                'Friday': {
+                    type: 'Optional Run',
+                    workout: 'Optional Easy Run + Mobility Flow',
+                    duration: 45,
+                    warmup: "If running: 8min easy build. If mobility: 5min gentle movement",
+                    main: [
+                        "OPTION A: 30min easy recovery run + 15min mobility",
+                        "OPTION B: 45min comprehensive mobility",
+                        "Hip Mobility: Hip flexor stretches 3x45sec, Figure-4 2x45sec, Hip circles 10 each",
+                        "Shoulder Mobility: Wall slides 3x10, Doorway pec stretch 2x45sec, Band pull-aparts 2x15, Thread the needle 2x30sec",
+                        "Prepare body for Saturday adventure"
+                    ],
+                    cooldown: "Complete relaxation"
                 },
-                'Saturday': { type: 'Long Adventure', workout: 'Long Trail Run/Ski (3-4hrs)', duration: 200,
-                    warmup: "15min progressive warm-up with pack: easy movement → gradually build intensity → practice target aerobic pace",
-                    main: ["3-4hr continuous trail running/skiing with 10-15lb pack", "Kyle-style long day: build aerobic capacity through time", "Mix terrain: uphills, flats, technical sections", "Practice nutrition every 45-60min", "Focus on sustainable pacing - could maintain for 6+ hours", "Mental training: stay focused for extended duration"],
-                    cooldown: "20min walking cool-down, comprehensive stretching, refuel properly within 30min"
+                'Saturday': {
+                    type: 'Long Adventure',
+                    workout: 'Long Trail Run/Ski',
+                    duration: 200,
+                    warmup: "15min progressive with pack: easy → build intensity → practice target pace",
+                    main: [
+                        "3-4hr continuous trail running/skiing with pack",
+                        "Week 1-2: 10-15lbs, Week 3-4: 15-20lbs",
+                        "Mix terrain: uphills, flats, technical sections",
+                        "Practice nutrition every 45-60min",
+                        "Focus on sustainable pacing"
+                    ],
+                    cooldown: "20min walk cool-down, comprehensive stretching, refuel"
                 },
-                'Sunday': { type: 'Recovery', workout: 'Optional Easy Run + Deep Recovery', duration: 60,
-                    warmup: "If running: 5min very easy. If recovery only: gentle movement assessment",
-                    main: ["OPTION A: 30-45min very easy recovery run/ski + 30min recovery work", "OPTION B: Skip activity, do 60min full recovery protocol", "Recovery focus: foam rolling, stretching, fascial release", "Listen to your body - complete rest if needed", "Mountainfit approach: movement quality over quantity"],
-                    cooldown: "Complete rest and preparation for the week ahead"
-                }
-            },
-            
-            // Aerobic Development Phase (Weeks 5-8) - Volume Focus
-            2: {
-                'Monday': { type: 'Rest & Mobility', workout: 'Active Recovery + Fascial Release', duration: 35,
-                    warmup: "5min gentle movement assessment - how do legs feel from weekend volume?",
-                    main: ["Light fascial release: legs focus (10min) - manage training load", "Hip and glute stretches: 8min - counter sitting/skinning position", "Shoulder mobility: wall slides, doorway stretch (5min)", "Gentle yoga flow: 10min - full body integration", "Meditation/visualization: 5min - mental training"],
-                    cooldown: "Complete relaxation and mental preparation for higher volume week"
-                },
-                'Tuesday': { type: 'Gym Training', workout: 'Weighted Step-ups + Pull-ups + Plyometrics', duration: 65,
-                    warmup: "10min progressive: 2min walk → joint mobility circles → bodyweight movement prep → light plyometric activation → practice target movements with focus",
-                    main: ["Weighted step-ups: 4x10 each leg (15-25lb pack) - increased load", "Pull-ups: 4x6-10 reps (add weight if possible) - progressive overload", "Box jumps: 3x5 (focus on soft landing) - fascial preparation", "Lateral bounds: 3x6 each direction - multi-plane power", "Single-leg deadlifts: 3x8 each leg - unilateral stability", "Push-ups: 3x10-15 - balanced development"],
-                    cooldown: "Deep calf stretch, IT band roll, quad stretch, upper body mobility"
-                },
-                'Wednesday': { type: 'Trail Run', workout: 'Tempo Intervals + Base', duration: 75,
-                    warmup: "15min progressive: easy run → dynamic strides → tempo pace practice → confirm Zone 2-3 intensity",
-                    main: ["15min easy base running (Zone 1)", "5x6min tempo intervals at touring pace (Zone 2-3)", "2min easy recovery between intervals", "15min easy base running to finish", "Total: 75min with quality tempo work - Cascade periodization", "Simulate variable touring terrain demands"],
-                    cooldown: "10min easy cool-down jog, full leg stretching routine"
-                },
-                'Thursday': { type: 'Gym Training', workout: 'Single-leg Power + Nordic Curls + Rows', duration: 60,
-                    warmup: "12min activation: easy movement → joint mobility → power prep → explosive movement practice",
-                    main: ["Single-leg box step-ups (explosive): 4x6 each leg - unilateral power", "Nordic hamstring curls: 4x3-6 reps - eccentric strength", "Single-arm rows: 3x8 each arm - unilateral pull strength", "Lateral lunges: 3x8 each direction - multi-plane movement", "Calf raises (single leg): 3x12 each - boot interface strength", "Pull-ups: 3x6-10 - maintain upper body strength"],
-                    cooldown: "Deep hamstring stretch, calf stretch, hip flexor release, upper back mobility"
-                },
-                'Friday': { type: 'Optional Run', workout: 'Optional Run: Fat-burning Pace + Mobility', duration: 50,
-                    warmup: "If running: 10min very easy build to fat-burning pace. If mobility only: gentle assessment",
-                    main: ["OPTION A: 35min easy fat-burning pace run (Zone 1) + 15min mobility", "OPTION B: 50min comprehensive mobility session", "Focus: active recovery and metabolic efficiency", "Kyle approach: aerobic development through easy volume", "Should feel energizing, not depleting"],
-                    cooldown: "Extended stretching, preparation for weekend volume"
-                },
-                'Saturday': { type: 'Long Adventure', workout: 'Long Adventure Run/Ski (4-5hrs)', duration: 280,
-                    warmup: "15min progressive warm-up with pack - build to aerobic pace over time",
-                    main: ["4-5hr continuous movement with 15-25lb pack", "Kyle methodology: high volume aerobic development", "Mix running/skiing: uphills, technical terrain simulation", "Include 2-3 'rest stops' (5min each) - simulate real touring", "Last 2 hours: practice steady skinning pace", "Nutrition practice: eat/drink as you would on actual tour"],
-                    cooldown: "20min walking cooldown, comprehensive stretching, proper refueling protocol"
-                },
-                'Sunday': { type: 'Recovery', workout: 'Optional Easy Run + Full Body Recovery', duration: 70,
-                    warmup: "If running: 5min very gentle start. If recovery only: full body assessment",
-                    main: ["OPTION A: 40min very easy movement + 30min recovery protocols", "OPTION B: 70min comprehensive recovery session", "Full body focus: legs, shoulders, spine mobility", "Should feel refreshing and restorative", "Prepare body for continued volume progression"],
-                    cooldown: "Gentle relaxation, mental preparation for upcoming week"
+                'Sunday': {
+                    type: 'Recovery',
+                    workout: 'Optional Easy Run + Deep Recovery',
+                    duration: 60,
+                    warmup: "If running: 5min very easy. If recovery: gentle assessment",
+                    main: [
+                        "OPTION A: 30-45min very easy recovery run + 30min recovery work",
+                        "OPTION B: 60min full recovery protocol",
+                        "Recovery focus: foam rolling, stretching, fascial release",
+                        "Listen to your body - complete rest if needed"
+                    ],
+                    cooldown: "Complete rest, prepare for week ahead"
                 }
             }
         };
 
-        // Extended workout library for all phases
-        const extendedWorkouts = {
-            // Strength & Power Phase (Weeks 9-12)
-            'Gym: Drop Jumps + Pistol Squats + Weighted Pulls': {
-                warmup: "12min progressive: easy movement → joint prep → plyometric activation → practice drop landings with focus on absorption",
-                main: ["Drop jumps: 4x3 from 12-18\" box (focus on soft absorption) - fascial prep for cliff drops", "Pistol squat progression: 3x3-5 each leg - single-leg strength", "Weighted pull-ups: 4x5-8 (+10-25lbs) - progressive overload", "Depth jumps: 3x3 (advanced only) - impact preparation", "Nordic hamstring curls: 3x3-5 (eccentric focus) - injury prevention"],
-                cooldown: "Fascial release: calves, quads, glutes - 15min deep tissue work"
-            },
-            
-            'Trail Run: VO2 Intervals (simulate hard touring)': {
-                warmup: "20min progressive build including tempo pace practice - neural activation",
-                main: ["6x4min intervals at VO2max pace (Zone 4-5)", "3min recovery between intervals", "Simulate steep touring or exposed terrain pace", "Should be challenging but sustainable for interval duration", "Mental training: maintain focus under stress"],
-                cooldown: "15min easy cool-down, deep breathing, lactate clearance"
-            },
-
-            // Peak & Taper Phase (Weeks 13+)
-            'Gym: Maintenance Strength + Neural Activation': {
-                warmup: "8min easy movement prep and neural activation - prime nervous system",
-                main: ["Light box jumps: 3x3 (maintenance only) - keep power", "Bodyweight step-ups: 3x8 each leg - movement quality", "Pull-ups: 3x5-8 (maintenance volume) - strength maintenance", "Single-leg glute bridges: 2x10 each - activation", "Movement quality work: 15min - Mountainfit approach"],
-                cooldown: "Light stretching, relaxation focus, mental preparation"
-            }
-        };
-
-        // Generate weekly schedule based on training phase and philosophy
+        // Generate schedule based on week and phase
         function generateSchedule(week) {
-            let baseSchedule;
+            const base = JSON.parse(JSON.stringify(baseWorkouts.week1));
             
-            // Base Building (Weeks 1-4) - Cascade Endurance Foundation
+            // Adjust Saturday duration progressively
             if (week <= 4) {
-                baseSchedule = workouts[1];
-                // Adjust Saturday duration progressively
-                baseSchedule.Saturday.duration = 180 + (week * 20);
-                baseSchedule.Saturday.main[0] = `${3 + week}hr continuous trail running/skiing with ${10 + (week * 2.5)}lb pack`;
+                base.Saturday.duration = 180 + (week * 20);
+                base.Saturday.main[0] = `${3 + week * 0.25}hr continuous trail with ${10 + (week * 2.5)}lb pack`;
+            } else if (week <= 8) {
+                base.Saturday.duration = 240 + ((week - 4) * 15);
+                base.Saturday.main[0] = `${4 + (week - 4) * 0.25}hr continuous with ${15 + ((week - 4) * 2.5)}lb pack`;
+                base.Tuesday.main[0] = `Weighted step-ups: 4x10 each leg (${15 + ((week - 4) * 2.5)}lb pack)`;
+            } else if (week <= 12) {
+                base.Saturday.duration = 330 + ((week - 8) * 7);
+                base.Saturday.main[0] = `${5.5 + (week - 8) * 0.125}hr peak volume with ${20 + ((week - 8) * 2.5)}lb pack`;
+            } else {
+                base.Saturday.duration = 180;
+                base.Saturday.main[0] = "3hr moderate adventure with 15-20lb pack (taper)";
             }
             
-            // Aerobic Development (Weeks 5-8) - Kyle Volume Focus  
-            else if (week <= 8) {
-                baseSchedule = workouts[2];
-                // Progressive volume increase
-                baseSchedule.Saturday.duration = 240 + ((week - 4) * 15);
-                baseSchedule.Saturday.main[0] = `${4 + (week - 4)}hr continuous movement with ${15 + ((week - 4) * 2.5)}lb pack`;
-                
-                // Increase Tuesday gym loading
-                baseSchedule.Tuesday.main[0] = `Weighted step-ups: 4x10 each leg (${15 + ((week - 4) * 2.5)}lb pack) - increased load`;
-                baseSchedule.Tuesday.main[1] = week >= 7 ? "Pull-ups: 4x8-12 reps (add 5-10lbs if possible) - strength progression" : "Pull-ups: 4x6-10 reps (add weight if possible) - progressive overload";
-            }
-            
-            // Strength & Power (Weeks 9-12) - Mountainfit Power Focus
-            else if (week <= 12) {
-                baseSchedule = {
-                    'Monday': { type: 'Rest & Mobility', workout: 'Rest + Impact Recovery Protocol', duration: 40,
-                        warmup: "5min gentle movement assessment - recovery from high intensity work",
-                        main: ["Targeted fascial release: legs focus (12min) - manage training stress", "Impact recovery stretches: calves, quads (8min)", "Gentle movement flow: 10min", "Self-massage with tools: 10min", "Relaxation breathing: 5min"],
-                        cooldown: "Complete relaxation sequence - prepare for power work"
-                    },
-                    'Tuesday': { type: 'Gym Training', workout: 'Drop Jumps + Pistol Squats + Weighted Pulls', duration: 70,
-                        warmup: "12min progressive: easy movement → joint prep → plyometric activation → practice drop landings focusing on absorption mechanics",
-                        main: ["Drop jumps: 4x3 from 12-18\" box (focus on soft absorption) - fascial prep for cliff drops", "Pistol squat progression: 3x3-5 each leg - advanced single-leg strength", "Weighted pull-ups: 4x5-8 (+10-25lbs) - peak upper body strength", "Depth jumps: 3x3 (advanced only - proper landing mechanics) - impact prep", "Nordic hamstring curls: 3x3-5 (eccentric focus) - injury prevention"],
-                        cooldown: "Fascial release: calves, quads, glutes - 15min deep tissue work"
-                    },
-                    'Wednesday': { type: 'Trail Run', workout: 'VO2 Intervals (simulate hard touring)', duration: 70,
-                        warmup: "20min progressive build including tempo pace practice - prime aerobic system",
-                        main: ["6x4min intervals at VO2max pace (Zone 4-5) - peak aerobic power", "3min recovery between intervals", "Simulate steep touring or exposed terrain pace", "Should be challenging but sustainable for interval duration", "Mental training: maintain focus and technique under stress"],
-                        cooldown: "15min easy cool-down, deep breathing exercises, lactate clearance"
-                    },
-                    'Thursday': { type: 'Gym Training', workout: 'Multi-plane Power + Max Strength', duration: 65,
-                        warmup: "12min dynamic warm-up with multi-directional movement preparation",
-                        main: ["Lateral bounds: 4x5 each direction - multi-plane power", "Single-leg deadlifts (slow eccentric): 3x6 each - strength + control", "Rotational step-ups: 3x8 each leg - sport-specific power", "Eccentric pull-ups (5sec down): 3x3-5 - advanced strength", "Multi-directional lunges: 3x6 each direction - functional movement"],
-                        cooldown: "Full leg fascial release, deep stretching - 15min recovery protocol"
-                    },
-                    'Friday': { type: 'Optional Run', workout: 'Optional Easy Run + Movement Prep', duration: 50,
-                        warmup: "If running: 8min easy. If movement only: assessment and activation",
-                        main: ["OPTION A: 30min easy recovery run + 20min movement prep", "OPTION B: 50min movement preparation session", "Focus: preparing body for peak weekend demands", "Should feel energizing and confidence-building", "Movement quality over intensity"],
-                        cooldown: "Complete preparation for peak weekend session"
-                    },
-                    'Saturday': { type: 'Long Adventure', workout: 'Peak Long Day Run/Ski (5-6+ hours)', duration: 360,
-                        warmup: "20min progressive warm-up with full pack - systematic preparation for long effort",
-                        main: ["5-6+ hour adventure with 20-30lb pack - peak volume demand", "Simulate full touring day: elevation, technical terrain", "Include realistic rest stops and terrain challenges", "Practice pacing for sustained effort over many hours", "Mental training: maintain focus and positivity for extended duration", "Nutrition/hydration: practice race-day protocols"],
-                        cooldown: "25min cool-down walk, comprehensive stretching, proper recovery nutrition"
-                    },
-                    'Sunday': { type: 'Recovery', workout: 'Optional Recovery Run + Deep Restoration', duration: 75,
-                        warmup: "Very gentle movement assessment - how does body respond to peak training?",
-                        main: ["OPTION A: 30min easy recovery movement + 45min restoration", "OPTION B: 75min comprehensive restoration protocol", "Focus: deep recovery from peak training stress", "Full body restoration: legs, back, shoulders", "Prepare body and mind for final training block"],
-                        cooldown: "Complete rest and restoration - priority on recovery"
-                    }
-                };
-            }
-            
-            // Peak & Taper (Weeks 13+) - Season Prep
-            else {
-                baseSchedule = {
-                    'Monday': { type: 'Rest & Mobility', workout: 'Pre-Season Recovery + Mental Prep', duration: 35,
-                        warmup: "5min gentle movement check-in - assess readiness",
-                        main: ["Movement preparation sequence: 15min", "Mental preparation and visualization: 15min - season confidence", "Complete relaxation: 5min"],
-                        cooldown: "Rest and mental readiness for ski season"
-                    },
-                    'Tuesday': { type: 'Gym Training', workout: 'Maintenance Strength + Neural Activation', duration: 50,
-                        warmup: "8min easy movement prep and neural activation - prime nervous system without fatigue",
-                        main: ["Light box jumps: 3x3 (maintenance only) - keep neural pathways active", "Bodyweight step-ups: 3x8 each leg - movement quality focus", "Pull-ups: 3x5-8 (maintenance volume) - strength maintenance", "Single-leg glute bridges: 2x10 each - activation", "Movement quality work: 15min - Mountainfit approach to perfection"],
-                        cooldown: "Light stretching, relaxation focus, confidence building"
-                    },
-                    'Wednesday': { type: 'Trail Run', workout: 'Openers + Skills Practice', duration: 60,
-                        warmup: "15min progressive warm-up - smooth and controlled",
-                        main: ["3x5min tempo efforts at touring pace - neural activation", "3min recovery between efforts", "Purpose: neural activation, not fatigue", "Should feel smooth, controlled, and confidence-building", "Practice efficient movement patterns and technique"],
-                        cooldown: "10min easy cool-down, mental preparation"
-                    },
-                    'Thursday': { type: 'Gym Training', workout: 'Light Power + Movement Quality', duration: 45,
-                        warmup: "8min gentle activation and movement preparation",
-                        main: ["Fast bodyweight squats: 3x5 - neural activation", "Explosive step-ups: 3x3 each leg - maintain power", "Pull-ups (fast concentric): 3x3-5 - neural drive", "Jump prep: 2x5 small jumps - maintain reactivity", "Movement quality work: 15min - perfect technique focus"],
-                        cooldown: "Easy stretching, mental preparation, confidence building"
-                    },
-                    'Friday': { type: 'Optional Run', workout: 'Optional Easy Run + Final Prep', duration: 40,
-                        warmup: "If running: 6min very easy. If prep only: gentle assessment",
-                        main: ["OPTION A: 25min easy run + 15min final prep", "OPTION B: 40min pre-season preparation", "Focus: final tuning and confidence building", "Light, energizing, and positive", "Mental rehearsal of successful tours"],
-                        cooldown: "Mental and physical readiness confirmation"
-                    },
-                    'Saturday': { type: 'Long Adventure', workout: 'Moderate Adventure Run/Ski', duration: 180,
-                        warmup: "15min moderate warm-up with light pack",
-                        main: ["3hr moderate adventure with 15-20lb pack", "Taper volume while maintaining movement quality", "Focus on efficiency, enjoyment, and confidence", "Practice final pre-season skills and techniques", "Mental rehearsal: visualize successful touring"],
-                        cooldown: "Relaxed cool-down and mental preparation for season"
-                    },
-                    'Sunday': { type: 'Recovery', workout: 'Complete Recovery + Season Readiness', duration: 60,
-                        warmup: "Gentle movement check-in and readiness assessment",
-                        main: ["OPTION A: 30min easy movement + 30min season prep", "OPTION B: 60min complete season preparation", "Mental and physical readiness protocols", "Visualization and confidence building exercises", "Complete preparation for successful touring season"],
-                        cooldown: "Rest and complete season readiness - you are prepared!"
-                    }
-                };
-            }
-            
-            // Convert to array format
+            // Convert to array
             const schedule = [];
-            Object.entries(baseSchedule).forEach(([day, workout]) => {
+            Object.entries(base).forEach(([day, workout]) => {
                 schedule.push({ day, ...workout });
             });
             
             return schedule;
         }
 
-        // Render workout grid
+        // Get emoji for workout type
+        function getIcon(type) {
+            const icons = {
+                'Rest & Mobility': '🧘‍♂️',
+                'Gym Training': '💪',
+                'Trail Run': '🏃‍♂️',
+                'Optional Run': '🤸‍♂️',
+                'Long Adventure': '⛰️',
+                'Recovery': '😌'
+            };
+            return icons[type] || '🎿';
+        }
+
+        // Render workouts
         function renderWorkouts() {
             const schedule = generateSchedule(currentWeek);
             const grid = document.getElementById('workout-grid');
@@ -377,7 +317,7 @@
                         <div class="mt-4 pt-3 border-t border-gray-200">
                             <div class="flex items-center justify-center space-x-2 text-blue-600 font-medium">
                                 <span>▶️</span>
-                                <span>Tap for Full Workout Details</span>
+                                <span>Tap for Full Details</span>
                             </div>
                         </div>
                     </div>
@@ -385,29 +325,14 @@
             }).join('');
         }
 
-        // Get emoji icon for workout type
-        function getIcon(type) {
-            const icons = {
-                'Rest & Mobility': '🧘‍♂️',
-                'Gym Training': '💪',
-                'Trail Run': '🏃‍♂️',
-                'Optional Run': '🤸‍♂️',
-                'Long Adventure': '⛰️',
-                'Recovery': '😌'
-            };
-            return icons[type] || '🎿';
-        }
-
-        // Toggle workout completion
+        // Toggle completion
         function toggleCompletion(event, workoutId) {
             event.stopPropagation();
-            
             if (completedWorkouts.has(workoutId)) {
                 completedWorkouts.delete(workoutId);
             } else {
                 completedWorkouts.add(workoutId);
             }
-            
             saveData();
             updateUI();
         }
@@ -429,7 +354,55 @@
             }
         }
 
-        // Open workout modal
+        // Add to calendar
+        function addToCalendar(day, workout) {
+            const today = new Date();
+            const dayIndex = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(day);
+            const currentDayIndex = today.getDay();
+            
+            let daysUntilWorkout = dayIndex - currentDayIndex;
+            if (daysUntilWorkout <= 0) daysUntilWorkout += 7;
+            
+            const workoutDate = new Date();
+            workoutDate.setDate(today.getDate() + daysUntilWorkout);
+            
+            const workoutTimes = {
+                'Rest & Mobility': { hour: 9, minute: 0 },
+                'Gym Training': { hour: 18, minute: 0 },
+                'Trail Run': { hour: 7, minute: 0 },
+                'Optional Run': { hour: 17, minute: 0 },
+                'Long Adventure': { hour: 8, minute: 0 },
+                'Recovery': { hour: 10, minute: 0 }
+            };
+            
+            const time = workoutTimes[workout.type] || { hour: 9, minute: 0 };
+            workoutDate.setHours(time.hour, time.minute, 0, 0);
+            
+            const endDate = new Date(workoutDate);
+            endDate.setMinutes(endDate.getMinutes() + workout.duration);
+            
+            const formatDate = (date) => {
+                return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+            };
+            
+            const eventDetails = {
+                title: `${day}: ${workout.workout}`,
+                start: formatDate(workoutDate),
+                end: formatDate(endDate),
+                description: `Week ${currentWeek} Training\\n\\nWarm-up: ${workout.warmup}\\n\\nMain: ${workout.main.join(', ')}\\n\\nCool-down: ${workout.cooldown}`,
+                location: workout.type.includes('Gym') ? 'Gym' : workout.type.includes('Trail') ? 'Trail/Outdoors' : 'Home/Flexible'
+            };
+            
+            const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&` +
+                `text=${encodeURIComponent(eventDetails.title)}&` +
+                `dates=${eventDetails.start}/${eventDetails.end}&` +
+                `details=${encodeURIComponent(eventDetails.description)}&` +
+                `location=${encodeURIComponent(eventDetails.location)}`;
+            
+            window.open(calendarUrl, '_blank');
+        }
+
+        // Open modal
         function openModal(day) {
             const schedule = generateSchedule(currentWeek);
             selectedWorkout = schedule.find(w => w.day === day);
@@ -440,30 +413,19 @@
             
             const content = `
                 <div class="flex items-center space-x-4 text-sm text-gray-600 mb-6">
-                    <div class="flex items-center">
-                        <span class="mr-1">⏱️</span>
-                        ${selectedWorkout.duration} minutes
-                    </div>
-                    <div class="flex items-center">
-                        <span class="mr-1">${getIcon(selectedWorkout.type)}</span>
-                        ${selectedWorkout.type}
-                    </div>
+                    <div><span class="mr-1">⏱️</span>${selectedWorkout.duration} minutes</div>
+                    <div><span class="mr-1">${getIcon(selectedWorkout.type)}</span>${selectedWorkout.type}</div>
                 </div>
 
                 <div class="bg-blue-50 p-4 rounded-lg mb-6">
                     <h4 class="font-semibold text-blue-800 mb-2">Warm-up</h4>
-                    <p class="text-blue-700">${selectedWorkout.warmup}</p>
+                    <p class="text-blue-700 whitespace-pre-line">${selectedWorkout.warmup}</p>
                 </div>
 
                 <div class="bg-orange-50 p-4 rounded-lg mb-6">
                     <h4 class="font-semibold text-orange-800 mb-3">Main Workout</h4>
-                    <div class="space-y-2">
-                        ${selectedWorkout.main.map((exercise, idx) => `
-                            <div class="flex items-start space-x-2">
-                                <span class="text-orange-600 font-medium">${idx + 1}.</span>
-                                <span class="text-orange-700">${exercise}</span>
-                            </div>
-                        `).join('')}
+                    <div class="space-y-1 text-orange-700">
+                        ${selectedWorkout.main.map(exercise => `<div>${exercise}</div>`).join('')}
                     </div>
                 </div>
 
@@ -475,6 +437,7 @@
             
             document.getElementById('modal-content').innerHTML = content;
             document.getElementById('complete-btn').onclick = () => markCompleteAndClose(day);
+            document.getElementById('add-to-calendar-btn').onclick = () => addToCalendar(day, selectedWorkout);
             document.getElementById('modal').classList.remove('hidden');
             document.getElementById('modal').classList.add('flex');
         }
@@ -486,16 +449,14 @@
             selectedWorkout = null;
         }
 
-        // Mark complete and close modal
+        // Mark complete and close
         function markCompleteAndClose(day) {
             const workoutId = `${currentWeek}-${day}`;
-            
             if (completedWorkouts.has(workoutId)) {
                 completedWorkouts.delete(workoutId);
             } else {
                 completedWorkouts.add(workoutId);
             }
-            
             saveData();
             updateUI();
             closeModal();
@@ -505,12 +466,10 @@
         function updateUI() {
             const phase = getPhase(currentWeek);
             
-            // Update week display
             document.getElementById('current-week').textContent = `Week ${currentWeek}`;
             document.getElementById('phase-badge').textContent = `Week ${currentWeek}: ${phase.name}`;
             document.getElementById('phase-badge').className = `${phase.color} text-white px-4 py-2 rounded-full text-sm font-medium`;
             
-            // Update phase description
             const descriptions = {
                 "Base Building": "Focus: Skinning pace aerobic base, single-leg strength foundation, fascial preparation",
                 "Aerobic Development": "Focus: Long day endurance, weighted step-ups, plyometric preparation, back-to-back sessions",
@@ -519,23 +478,20 @@
             };
             document.getElementById('phase-description').textContent = descriptions[phase.name];
             
-            // Update completion rate
             const schedule = generateSchedule(currentWeek);
             const completedThisWeek = schedule.filter(w => completedWorkouts.has(`${currentWeek}-${w.day}`)).length;
             const completionRate = Math.round((completedThisWeek / schedule.length) * 100);
             document.getElementById('completion-rate').textContent = `Completion: ${completionRate}%`;
             
-            // Re-render workouts
             renderWorkouts();
         }
 
-        // Initialize app
+        // Initialize
         function init() {
             loadSavedData();
             updateUI();
         }
 
-        // Start the app
         init();
     </script>
 </body>
